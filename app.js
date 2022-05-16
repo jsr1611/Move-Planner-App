@@ -26,7 +26,7 @@ function loadData() {
 
    
 
-    var NYT_url = "https://api.nytimes.com/svc/search/v2/articleseAAAAAAarch.json?fq=glocations:"+ city+ "&api-key=" + api_keys.NYT_API_KEY;
+    var NYT_url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?fq=glocations:"+ city+ "&api-key=" + api_keys.NYT_API_KEY;
     var headline = "New York Times Articles ";
     $.getJSON(NYT_url, function(data){
         // console.log(data.response.docs);
@@ -42,7 +42,31 @@ function loadData() {
         console.log("fail in the get json data");
         $nytHeaderElem.text(headline + " Could Not Be Loaded");
     })
-    
+
+    var wiki_url = "https://en.wikipedia.org/w/api.php";
+    var params = {
+        action: "query",
+        list: "search",
+        srsearch: city,
+        format: "jsonp"
+    };
+
+    $.ajax({
+        url: wiki_url,
+        data: params,
+        dataType: "jsonp",
+        success: function(data){
+            var items = [];
+            $.each(data.response.docs, function(key, val){
+                items.push("<li id='"+key+"'>" + '<a target="_blank" href="'+val.ur + '">'+val.title + "</a></li>");
+            });
+            $wikiElem.append(items);
+            console.log("items", items);
+        }
+    }).fail(function(e){
+        console.log('failed to find wiki data');
+        $wikiElem.append("<li>No Wikipedia Data Found </li>");
+    })
     
 
     return false;
