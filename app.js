@@ -24,11 +24,10 @@ function loadData() {
     var streetViewUrl = 'http://maps.googleapis.com/maps/api/streetview?key='+ api_keys.GOOGLE_API_KEY+'&size=600x300&location=' + address + '';
     $('.bgimg').attr("src", streetViewUrl);
 
-    var headline = "New York Times Articles About " + city;
-    $nytHeaderElem.text(headline);
+   
 
-    var NYT_url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?fq=glocations:"+ city+ "&api-key=" + api_keys.NYT_API_KEY;
-    
+    var NYT_url = "https://api.nytimes.com/svc/search/v2/articleseAAAAAAarch.json?fq=glocations:"+ city+ "&api-key=" + api_keys.NYT_API_KEY;
+    var headline = "New York Times Articles ";
     $.getJSON(NYT_url, function(data){
         // console.log(data.response.docs);
         var items = [];
@@ -38,7 +37,13 @@ function loadData() {
         
         $nytElem.append(items);
         console.log("items: " +  items.length);
-    });
+        $nytHeaderElem.text(headline +" About "+ city);
+    }).fail(function(data, textStatus, xhr){
+        console.log("fail in the get json data");
+        $nytHeaderElem.text(headline + " Could Not Be Loaded");
+    })
+    
+    
 
     return false;
 };
