@@ -18,8 +18,7 @@ function loadData() {
     var address = street + ", " + city;
 
     
-    console.log(api_keys)
-    
+        
     $greeting.text('So, you want to live at ' + address + '?');
     var streetViewUrl = 'http://maps.googleapis.com/maps/api/streetview?key='+ api_keys.GOOGLE_API_KEY+'&size=600x300&location=' + address + '';
     $('.bgimg').attr("src", streetViewUrl);
