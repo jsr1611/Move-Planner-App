@@ -43,22 +43,25 @@ function loadData() {
         $nytHeaderElem.text(headline + " Could Not Be Loaded");
     })
 
-    var wiki_url = "https://en.wikipedia.org/w/api.php";
-    var params = {
-        action: "query",
-        list: "search",
-        srsearch: city,
-        format: "jsonp"
-    };
+    var wiki_url = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + city + '&format=json&callback=wikiCallback';
+    // var params = {
+    //     action: "query",
+    //     generator: "search",
+    //     gsrsearch: city,
+    //     format: "json"
+    // };
 
-    $.ajax({
-        url: wiki_url,
-        data: params,
+    $.ajax(wiki_url, {
+        // url: wiki_url,
+        // data: params,
         dataType: "jsonp",
-        success: function(data){
+        //jsonp: "callback",
+        success: function(response){
+            console.log(response);
             var items = [];
-            $.each(data.response.docs, function(key, val){
-                items.push("<li id='"+key+"'>" + '<a target="_blank" href="'+val.ur + '">'+val.title + "</a></li>");
+            var articleList = response[1];
+            $.each(articleList, function(key, val){
+                items.push("<li id='"+key+"'>" + '<a target="_blank" href="https://en.wikipedia.org/wiki/'+val.replaceAll(" ", "_") + '">'+val + "</a></li>");
             });
             $wikiElem.append(items);
             console.log("items", items);
