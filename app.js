@@ -18,7 +18,7 @@ function loadData() {
     var address = street + ", " + city;
 
     
-    // console.log(api_keys)
+    console.log(api_keys)
     
     $greeting.text('So, you want to live at ' + address + '?');
     var streetViewUrl = 'http://maps.googleapis.com/maps/api/streetview?key='+ api_keys.GOOGLE_API_KEY+'&size=600x300&location=' + address + '';
@@ -61,7 +61,7 @@ function loadData() {
                 items.push("<li id='"+key+"'>" + '<a target="_blank" href="https://en.wikipedia.org/wiki/'+val.replaceAll(" ", "_") + '">'+val + "</a></li>");
             });
             $wikiElem.append(items);
-            
+
             clearTimeout(wikiReqTimeout);
         }
     }).fail(function(e){
