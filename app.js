@@ -18,7 +18,7 @@ function loadData() {
     var address = street + ", " + city;
 
     
-    console.log(api_keys)
+    // console.log(api_keys)
     
     $greeting.text('So, you want to live at ' + address + '?');
     var streetViewUrl = 'http://maps.googleapis.com/maps/api/streetview?key='+ api_keys.GOOGLE_API_KEY+'&size=600x300&location=' + address + '';
@@ -36,20 +36,17 @@ function loadData() {
         });
         
         $nytElem.append(items);
-        console.log("items: " +  items.length);
+        // console.log("items: " +  items.length);
         $nytHeaderElem.text(headline +" About "+ city);
     }).fail(function(data, textStatus, xhr){
-        console.log("fail in the get json data");
+        // console.log("fail in the get json data");
         $nytHeaderElem.text(headline + " Could Not Be Loaded");
     })
 
     var wiki_url = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + city + '&format=json&callback=wikiCallback';
-    // var params = {
-    //     action: "query",
-    //     generator: "search",
-    //     gsrsearch: city,
-    //     format: "json"
-    // };
+    var wikiReqTimeout = setTimeout(function(){
+        $wikiElem.text("failed to get wikipedia resources");
+    }, 8000);
 
     $.ajax(wiki_url, {
         // url: wiki_url,
@@ -57,17 +54,18 @@ function loadData() {
         dataType: "jsonp",
         //jsonp: "callback",
         success: function(response){
-            console.log(response);
+            // console.log(response);
             var items = [];
             var articleList = response[1];
             $.each(articleList, function(key, val){
                 items.push("<li id='"+key+"'>" + '<a target="_blank" href="https://en.wikipedia.org/wiki/'+val.replaceAll(" ", "_") + '">'+val + "</a></li>");
             });
             $wikiElem.append(items);
-            console.log("items", items);
+            
+            clearTimeout(wikiReqTimeout);
         }
     }).fail(function(e){
-        console.log('failed to find wiki data');
+        // console.log('failed to find wiki data');
         $wikiElem.append("<li>No Wikipedia Data Found </li>");
     })
     
